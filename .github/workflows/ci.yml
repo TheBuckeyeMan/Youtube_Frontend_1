@@ -29,15 +29,22 @@ jobs:
           node-version: 16
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
       - name: Verify react-scripts
         run: ls -l node_modules/.bin/react-scripts
+      - name: Debug CI Environment
+        run: |
+          echo $PATH
+          ls -l
+          ls -l node_modules/.bin
+          whoami
 
       - name: Add Permissions for Build
         run: chmod -R 755 node_modules/.bin
 
       - name: Build React Application
+        shell: bash
         run: npm run build
 
       - name: Pass job 1 to job 2
