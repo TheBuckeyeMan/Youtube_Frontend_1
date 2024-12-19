@@ -1,35 +1,29 @@
 # Step 1: Use the official Node.js image for building the app
-FROM node:16 as build
+FROM node:18-alpine AS build
 
 # Step 2: Set the working directory inside the container
 WORKDIR /app
 
 # Step 3: Copy package.json and package-lock.json
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
 # Step 4: Install dependencies
-RUN npm install
+RUN npm ci
 
 # Step 5: Copy the application source code
 COPY . .
 
-# Step 6: Ensure correct permissions for scripts
-RUN chmod -R 755 /app/node_modules/.bin
-
-# Step 7: Build the React application for production
+# Step 6: Build the React application for production
 RUN npm run build
 
-# Step 8: Use Nginx as a lightweight web server
+# Step 7: Use Nginx to serve the production build
 FROM nginx:alpine
 
-# Step 9: Copy the build output to the Nginx web server's directory
+# Step 8: Copy the React build output to Nginx's web server directory
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Step 10: Copy custom Nginx configuration if needed (optional)
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Step 11: Expose the port for Nginx
+# Step 9: Expose port 80 for Nginx - Use localhost:3000
 EXPOSE 80
 
-# Step 12: Start Nginx
+# Step 10: Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
