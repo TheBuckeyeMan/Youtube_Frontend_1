@@ -1,14 +1,14 @@
 # Step 1: Use the official Node.js image for building the app
-FROM node:18-alpine AS build
+FROM node:18-alpine AS builder
 
 # Step 2: Set the working directory inside the container
 WORKDIR /app
 
 # Step 3: Copy package.json and package-lock.json
-COPY package.json package-lock.json ./
+COPY package*.json ./
 
 # Step 4: Install dependencies
-RUN npm ci
+RUN npm install
 
 # Step 5: Copy the application source code
 COPY . .
@@ -20,7 +20,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Step 8: Copy the React build output to Nginx's web server directory
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=builder /app/build /usr/share/nginx/html
 
 # Step 9: Expose port 80 for Nginx - Use localhost:3000
 EXPOSE 80
