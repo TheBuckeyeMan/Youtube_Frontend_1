@@ -11,6 +11,7 @@ COPY package*.json ./
 RUN npm install
 
 # Step 5: Copy the application source code
+RUN chmod +x node_modules/.bin/react-scripts
 COPY . .
 
 # Step 6: Build the React application for production
