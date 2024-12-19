@@ -31,9 +31,14 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Verify react-scripts
+        run: ls -l node_modules/.bin/react-scripts
+
+      - name: Add Permissions for Build
+        run: chmod -R 755 node_modules/.bin
+
       - name: Build React Application
         run: npm run build
-
 
       - name: Pass job 1 to job 2
         uses: actions/upload-artifact@v4

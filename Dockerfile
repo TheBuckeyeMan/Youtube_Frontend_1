@@ -8,10 +8,13 @@ WORKDIR /app
 COPY package*.json ./
 
 # Step 4: Install dependencies
-RUN npm install
+RUN npm ci
 
 # Step 5: Copy the application source code
 COPY . .
+
+#Build the React application for production
+RUN chmod -R 755 /app/node_modules/.bin && npm run build
 
 # Step 6: Build the React application for production
 RUN npm run build
