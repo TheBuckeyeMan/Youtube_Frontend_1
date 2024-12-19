@@ -11,23 +11,25 @@ COPY package*.json ./
 RUN npm install
 
 # Step 5: Copy the application source code
-RUN chmod +x node_modules/.bin/react-scripts
 COPY . .
 
-# Step 6: Build the React application for production
+# Step 6: Ensure correct permissions for scripts
+RUN chmod -R 755 /app/node_modules/.bin
+
+# Step 7: Build the React application for production
 RUN npm run build
 
-# Step 7: Use Nginx as a lightweight web server
+# Step 8: Use Nginx as a lightweight web server
 FROM nginx:alpine
 
-# Step 8: Copy the build output to the Nginx web server's directory
+# Step 9: Copy the build output to the Nginx web server's directory
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Step 9: Copy custom Nginx configuration if needed (optional)
+# Step 10: Copy custom Nginx configuration if needed (optional)
 # COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Step 10: Expose the port for Nginx
-EXPOSE 8000
+# Step 11: Expose the port for Nginx
+EXPOSE 80
 
-# Step 11: Start Nginx
+# Step 12: Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
