@@ -1,35 +1,33 @@
-# # Step 1: Use the official Node.js image for building the app
-# FROM node:18-alpine AS builder
+# Step 1: Use the official Node.js image for building the app
+FROM node:18-alpine AS builder
 
-# # Step 2: Set the working directory inside the container
-# WORKDIR /app
+# Step 2: Set the working directory inside the container
+WORKDIR /app
 
-# # Step 3: Copy package.json and package-lock.json
-# COPY package*.json ./
+# Step 3: Copy package.json and package-lock.json
+COPY . /app/
 
-# # Step 4: Install dependencies
-# RUN npm ci
+# Step 4: Install dependencies
+RUN npm install
+RUN npm install react-scripts@5.0.1 -g
 
-# # Step 5: Copy the application source code
-# COPY . .
+# Step 6: Build the React application for production
+RUN npm run build
 
-# #Build the React application for production
-# RUN chmod -R 755 /app/node_modules/.bin && npm run build
+# Step 7: Use Nginx to serve the production build
+FROM nginx:alpine
 
-# # Step 6: Build the React application for production
-# RUN npm run build
+# Step 8: Copy the React build output to Nginx's web server directory
+COPY --from=builder /app/build /usr/share/nginx/html
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d
 
-# # Step 7: Use Nginx to serve the production build
-# FROM nginx:alpine
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
 
-# # Step 8: Copy the React build output to Nginx's web server directory
-# COPY --from=builder /app/build /usr/share/nginx/html
 
-# # Step 9: Expose port 80 for Nginx - Use localhost:3000
-# EXPOSE 80
 
-# # Step 10: Start Nginx
-# CMD ["nginx", "-g", "daemon off;"]
+
 # Step 1: Use the official Node.js image for building the app
 # FROM node:18-alpine AS builder
 
@@ -49,15 +47,21 @@
 # COPY --from=builder /app/build /usr/share/nginx/html
 # EXPOSE 80
 # CMD ["nginx", "-g", "daemon off;"]
-# Use Nginx for serving the production build
-FROM nginx:alpine
 
-# Copy the pre-built app into the Nginx directory
-COPY build /usr/share/nginx/html
 
-# Expose port 80 for the Nginx server
-EXPOSE 80
 
-# Start the Nginx server
-CMD ["nginx", "-g", "daemon off;"]
+
+
+
+
+# FROM nginx:alpine
+
+# # Copy the pre-built app into the Nginx directory
+# COPY build /usr/share/nginx/html
+
+# # Expose port 80 for the Nginx server
+# EXPOSE 80
+
+# # Start the Nginx server
+# CMD ["nginx", "-g", "daemon off;"]
 
