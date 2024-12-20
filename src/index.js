@@ -1,17 +1,32 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Route, BrowserRouter as Router, Routes} from 'react-router-dom';
+import Home from './Pages/home';
+import Journey from './Pages/journey';
+import Metrics from './Pages/metrics';
+import Header from "./Components/Header";
+import Footer from "./Components/Footer";
+import Navbar from "./Components/Navbar";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+
+
+const routing = (
+  <Router>
+    <React.StrictMode>
+      <Navbar />
+      <Header />
+        <Routes>
+          <Route exact path = '/' element={<Home />} />
+          <Route exact path = '/journey' element={<Journey />} />
+          <Route exact path = '/metrics' element={<Metrics />} />
+        </Routes>
+    </React.StrictMode>
+  </Router>
+
+
+)
+
+ReactDOM.createRoot(document.getElementById('root')).render(routing)
