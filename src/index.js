@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import reportWebVitals from './reportWebVitals';
+// import reportWebVitals from './reportWebVitals';
 import { Route, BrowserRouter as Router, Routes} from 'react-router-dom';
 import Home from './Pages/home';
 import Journey from './Pages/journey';
@@ -23,6 +23,7 @@ const routing = (
           <Route exact path = '/journey' element={<Journey />} />
           <Route exact path = '/metrics' element={<Metrics />} />
         </Routes>
+      <Footer />
     </React.StrictMode>
   </Router>
 
